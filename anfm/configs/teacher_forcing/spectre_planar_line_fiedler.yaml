@@ -1,0 +1,94 @@
+wandb:
+  project: planar-spectre
+  name: line-fiedler-0
+  enabled: true
+  log_interval: 2
+  sample_interval: 1000
+  val_interval: 200
+  log_time_interval: 500
+  num_samples: 32
+  entity: null
+hyper_parameters:
+  batch_size: 32
+  val_batch_size: 64
+  gradient_accumulation: 1
+  learning_rate: 2.5e-05
+  warmup_steps: 1000
+  decay_mode: constant
+  last_lr_factor: 0.1
+filtration:
+  filtration_size: 30
+  filtration_fn: line_fiedler
+  schedule_fn: quantile_filtration
+  num_laplacian_eigvecs: 4
+  random_walk_dim: 20
+  noise_schedule:
+  - 0.0
+  - 0.25
+  - 0.24285714285714285
+  - 0.2357142857142857
+  - 0.22857142857142856
+  - 0.22142857142857142
+  - 0.2142857142857143
+  - 0.20714285714285713
+  - 0.2
+  - 0.19285714285714284
+  - 0.18571428571428572
+  - 0.17857142857142858
+  - 0.17142857142857143
+  - 0.16428571428571426
+  - 0.15714285714285714
+  - 0.15
+  - 0.14285714285714285
+  - 0.1357142857142857
+  - 0.12857142857142856
+  - 0.12142857142857141
+  - 0.11428571428571427
+  - 0.10714285714285715
+  - 0.1
+  - 0.09285714285714283
+  - 0.08571428571428569
+  - 0.07857142857142854
+  - 0.07142857142857142
+  - 0.06428571428571428
+  - 0.057142857142857134
+  - 0.05
+  - 0.0
+dataloading:
+  node_ordering_noise: 0.025
+  num_workers: 1
+seed: 0
+device: cuda
+num_devices: 2
+strategy: auto
+num_steps: 50000
+checkpoint_steps: 10000
+dataset:
+  _target_: anfm.data.SpectrePlanarGraphDataset
+  num_repetitions: 256
+model:
+  _target_: anfm.models.MMLinkPredictor
+  num_layers: 5
+  embed_dim: 256
+  num_components: 8
+  filtration_size: 30
+  time_kwargs:
+    _target_: anfm.models.time_model.TimeMixer
+    num_layers: 1
+    num_heads: 4
+    ff_dim: 512
+    embed_dim: 256
+    filtration_size: 30
+  graph_kwargs:
+    _target_: anfm.models.sat.DiSAT
+    batch_renorm: true
+    num_layers: 1
+    gnn_type: gin
+    node_time_embedding: true
+    embed_dim: 256
+    max_time_steps: 30
+loss:
+  n_samples: 16
+timelimit: 6
+compile_model: false
+precision: bf16-mixed

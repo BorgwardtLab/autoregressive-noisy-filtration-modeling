@@ -1,0 +1,8 @@
+device: cuda
+batch_size: 512
+lr: 0.0001
+epochs: 256
+variant: continuous
+hidden_dim: 256
+latent_dim: 8
+dropout: 0.05

@@ -1,0 +1,81 @@
+wandb:
+  project: sbm-spectre
+  name: line-fiedler-0
+  entity: null
+  enabled: true
+  log_interval: 2
+  sample_interval: 1000
+  val_interval: 200
+  log_time_interval: 500
+  num_samples: 32
+hyper_parameters:
+  batch_size: 32
+  val_batch_size: 64
+  gradient_accumulation: 1
+  learning_rate: 1.0e-05
+  warmup_steps: 1000
+  decay_mode: constant
+  last_lr_factor: 0.1
+filtration:
+  filtration_size: 15
+  filtration_fn: line_fiedler
+  schedule_fn: quantile_filtration
+  num_laplacian_eigvecs: 4
+  random_walk_dim: 20
+  noise_schedule:
+  - 0.0
+  - 0.25
+  - 0.23461538461538461
+  - 0.21923076923076923
+  - 0.20384615384615384
+  - 0.18846153846153846
+  - 0.17307692307692307
+  - 0.1576923076923077
+  - 0.1423076923076923
+  - 0.12692307692307692
+  - 0.11153846153846153
+  - 0.09615384615384615
+  - 0.08076923076923076
+  - 0.06538461538461537
+  - 0.05
+  - 0.0
+dataloading:
+  node_ordering_noise: 0.01
+  num_workers: 1
+seed: 0
+device: cuda
+num_devices: 2
+strategy: auto
+num_steps: 200000
+checkpoint_steps: 10000
+dataset:
+  _target_: anfm.data.SpectreSBMGraphDataset
+  num_repetitions: 256
+  val_overrides:
+    num_repetitions: 4
+model:
+  _target_: anfm.models.MMLinkPredictor
+  num_layers: 5
+  embed_dim: 256
+  num_components: 4
+  filtration_size: 15
+  time_kwargs:
+    _target_: anfm.models.time_model.TimeMixer
+    num_layers: 1
+    num_heads: 4
+    ff_dim: 512
+    embed_dim: 256
+    filtration_size: 15
+  graph_kwargs:
+    _target_: anfm.models.sat.DiSAT
+    batch_renorm: true
+    num_layers: 1
+    gnn_type: gin
+    node_time_embedding: true
+    embed_dim: 256
+    max_time_steps: 15
+loss:
+  n_samples: 4
+timelimit: 6
+compile_model: false
+precision: bf16-mixed

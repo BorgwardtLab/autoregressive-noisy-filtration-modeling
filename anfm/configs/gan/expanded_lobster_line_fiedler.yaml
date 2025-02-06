@@ -1,0 +1,71 @@
+pretrained_model_folder: null
+pretrained_model_checkpoint: step_100000.ckpt
+discriminator:
+  _target_: anfm.models.discriminator.GraphDiscriminator
+  num_layers: 3
+  hidden_dim: 128
+value_model:
+  _target_: anfm.models.mixer_model.MMRegressor
+  num_layers: 5
+  embed_dim: 128
+  filtration_size: 30
+  num_edge_types: 2
+  time_kwargs:
+    _target_: anfm.models.time_model.TimeMixer
+    num_layers: 1
+    num_heads: 4
+    ff_dim: 512
+    embed_dim: 128
+    filtration_size: 30
+  graph_kwargs:
+    _target_: anfm.models.sat.DiSAT
+    num_layers: 1
+    gnn_type: gin
+    node_time_embedding: true
+    embed_dim: 128
+    max_time_steps: 30
+hyper_parameters:
+  generator:
+    lr: 1.25e-07
+    batch_size: 32
+    num_steps: 2
+    grad_accumulation: 4
+    num_epochs: 8
+    grad_clip_value: 2
+  value_model:
+    lr: 0.00025
+    batch_size: 32
+    num_pretrain_steps: 128
+    num_pretrain_samples: 4096
+    num_steps: 4
+    grad_accumulation: 4
+    grad_clip_value: 2
+  discriminator:
+    lr: 0.0001
+    batch_size: 32
+    num_pretrain_steps: 512
+    num_pretrain_samples: 4096
+    num_steps: 1
+    num_train_samples: 32
+    clamp_range: null
+    val_interval: 5
+  lower_reward_clip: -100
+  num_iterations: 4000
+  num_val_samples: 64
+discriminator_features:
+  random_walk_pe_dim: 20
+  num_laplacian_eigenvecs: 0
+  cycle_counts: false
+wandb:
+  enabled: true
+  project: final-lobster-gan
+  entity: null
+  name: line-fiedler-gan-0
+device: cuda
+num_devices: 1
+seed: 0
+deterministic: false
+val_ds_size: null
+save_interval: 10
+generation_batchsize: 512
+timelimit: 6

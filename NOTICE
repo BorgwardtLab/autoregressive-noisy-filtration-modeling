@@ -1,0 +1,5 @@
+Some parts of the codebase are adopted from other projects:
+- `anfm/models/batch_renorm.py`: originally from https://github.com/ludvb/batchrenorm/blob/master/batchrenorm/batchrenorm.py, licensed under the MIT license.
+- `anfm/models/causal_decoder.py`: inspired by a https://github.com/alex-matton/causal-transformer-decoder, licensed under the MIT license.
+- `anfm/models/robust_rwpe.py`: originally from https://github.com/pyg-team/pytorch_geometric/blob/aa6cf801ca24d45e8f684025f2045d0ae605102b/torch_geometric/transforms/add_positional_encoding.py, licensed under the MIT license.
+- `anfm/evaluation/dist_helper.py` and `anfm/evaluation/spectre_utils.py`: Adapted from https://github.com/lrjconan/GRAN/ (MIT license) which in turn is adapted from https://github.com/JiaxuanYou/graph-generation (MIT license)
